@@ -14,7 +14,7 @@ auto cmdline_args_to_span(int argc, const char *argv[]) -> std::span<std::string
     return args;
 }
 
-std::vector<unsigned char> utf8Convert(std::string str) {
+auto utf8Convert(std::string str) -> std::vector<unsigned char> {
 
     std::vector<unsigned char> utf8bytes;
 
