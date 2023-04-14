@@ -8,3 +8,9 @@ Usage:
 	--offset / -o <offset from the start of the TCP data>
   ```
   
+`./wireshark_capfilter --str "POST" --offset 0`
+
+```
+Output:
+tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354
+```
