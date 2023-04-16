@@ -28,7 +28,7 @@ auto utf8Convert(std::string str) -> std::vector<unsigned char> {
 }
 
 auto stringToBpf(std::string str, int offset) -> std::string {
-    //    int                        offset  = std::stoi(/* Get value of #searchOff input */);
+
     std::vector<unsigned char> bytes   = utf8Convert(str);
     std::string                snippet = "";
     int                        slicelen;
@@ -77,18 +77,9 @@ auto stringToBpf(std::string str, int offset) -> std::string {
 auto main(int argc, const char *argv[]) -> int {
 
     bool        debug  = false;
+    bool        help   = false;
     std::string offset = "0";
     std::string str    = "";
-
-    // TODO: Interactive mode
-    if (argc == 1) {
-        std::cout << "String-Matching Capture Filter Generator\n"
-                  << "Usage:\n"
-                  << "\t--str    / -s <string you want to match>\n"
-                  << "\t--offset / -o <offset from the start of the TCP data>\n"
-                  << "\n";
-        return 0;
-    }
 
     auto args = cmdline_args_to_span(argc, argv);
 
@@ -96,6 +87,9 @@ auto main(int argc, const char *argv[]) -> int {
         const auto &arg = *it;
         if (arg == "--debug") {
             debug = true;
+        }
+        else if (arg == "-h" || arg == "--help") {
+            help = true;
         }
         else if (arg == "-o" || arg == "--offset") {
             if (it != args.end() - 1) {
@@ -119,6 +113,24 @@ auto main(int argc, const char *argv[]) -> int {
             std::cerr << "Error: unknown parameter " << arg << "\n";
             return 1;
         }
+    }
+
+    if (help == true) {
+        std::cout << "String-Matching Capture Filter Generator\n"
+                  << "Usage:\n"
+                  << "\t--str    / -s <string you want to match>\n"
+                  << "\t--offset / -o <offset from the start of the TCP data>\n"
+                  << "\n";
+        return 0;
+    }
+
+    if (argc == 1) {
+        std::string interactive_input;
+        while (std::getline(std::cin, interactive_input)) {
+            std::cout << interactive_input << std::endl;
+            std::cout << stringToBpf(interactive_input, 0) << std::endl;
+        }
+        return 0;
     }
 
     if (debug == true) {
